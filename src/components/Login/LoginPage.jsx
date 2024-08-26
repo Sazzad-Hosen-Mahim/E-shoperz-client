@@ -3,18 +3,29 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { server } from "../../server.js";
-// import { toast } from "react-toastify";
+import { server } from "../../server.js";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
 
-     const navigate = useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
      e.preventDefault();
+
+     await axios.post(`${server}/user/login-user`, {
+      email,
+      password,
+     }, {withCredentials:true}).then((res) => {
+      toast.success("Login Success!");
+      navigate("/");
+     }).catch((err) => {
+      console.log(err);
+      toast.error(err.response.data.message)
+     })
 
      console.log(email, password)
 
